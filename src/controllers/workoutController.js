@@ -6,8 +6,15 @@ const getAllWorkouts = (req, res) => {
 };
 
 const getOneWorkout = (req, res) => {
-    const workout = workoutService.getOneWorkout();
-    res.send("Get an existing workout");
+    const {
+        params: { workoutId }
+    } = req;
+    if (!workoutId) {
+        res.status(400).send({status: "ERROR", message: "Missing required fields"});
+        return;
+    }
+    const workout = workoutService.getOneWorkout(workoutId);
+    res.send({status: "OK", data: workout});
 };
 
 const createNewWorkout = (req, res) => {
