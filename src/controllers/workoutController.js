@@ -69,8 +69,14 @@ const updateOneWorkout = (req, res) => {
         res.status(400).send({status: "ERROR", message: "Missing required fields"});
         return;
     }
-    const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
-    res.send({status: "OK", data: updatedWorkout});
+    try {
+        const updatedWorkout = workoutService.updateOneWorkout(workoutId, body);
+        res.send({status: "OK", data: updatedWorkout});
+    } catch (error) {
+        res
+            .status(error?.status || 500)
+            .send({status: "ERROR", message: error?.message || error});
+    }
 };
 
 const deleteOneWorkout = (req, res) => {

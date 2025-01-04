@@ -46,16 +46,23 @@ const createNewWorkout = (newWorkout) => {
 const updateOneWorkout = (workoutId, changes) => {
     const workoutIndex = DB.workouts.findIndex((workout) => workout.id === workoutId);
     if (workoutIndex === -1) {
-        return;
+        throw {
+            status: 404,
+            message: `Workout with ID '${workoutId}' not found`,
+        };
     }
-    const updatedWorkout = {
-        ...DB.workouts[workoutIndex],
-        ...changes,
-        updatedAt: new Date().toLocaleDateString("en-US", { timeZone: "UTC" }),
-    };
-    DB.workouts[workoutIndex] = updatedWorkout;
-    saveToDatabase(DB);
-    return updatedWorkout;
+    try {
+        const updatedWorkout = {
+            ...DB.workouts[workoutIndex],
+            ...changes,
+            updatedAt: new Date().toLocaleDateString("en-US", { timeZone: "UTC" }),
+        };
+        DB.workouts[workoutIndex] = updatedWorkout;
+        saveToDatabase(DB);
+        return updatedWorkout;
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
+    }
 };
 
 const deleteOneWorkout = (workoutId) => {
