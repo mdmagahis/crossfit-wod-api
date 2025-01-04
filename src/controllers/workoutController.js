@@ -56,8 +56,15 @@ const updateOneWorkout = (req, res) => {
 };
 
 const deleteOneWorkout = (req, res) => {
-    workoutService.deleteOneWorkout();
-    res.send("Delete an existing workout");
+    const {
+        params: { workoutId }
+    } = req;
+    if (!workoutId) {
+        res.status(400).send({status: "ERROR", message: "Missing required fields"});
+        return;
+    }
+    workoutService.deleteOneWorkout(workoutId);
+    res.status(204).send({status: "OK"});
 };
 
 module.exports = {
