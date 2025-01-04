@@ -1,8 +1,14 @@
 const workoutService = require("../services/workoutService");
 
 const getAllWorkouts = (req, res) => {
-    const allWorkouts = workoutService.getAllWorkouts();
-    res.send({status: "OK", data: allWorkouts});
+    try {
+        const allWorkouts = workoutService.getAllWorkouts();
+        res.send({status: "OK", data: allWorkouts});
+    } catch (error) {
+        res
+            .status(error?.status || 500)
+            .send({status: "ERROR", message: error?.message || error});
+    }
 };
 
 const getOneWorkout = (req, res) => {
@@ -13,8 +19,14 @@ const getOneWorkout = (req, res) => {
         res.status(400).send({status: "ERROR", message: "Missing required fields"});
         return;
     }
-    const workout = workoutService.getOneWorkout(workoutId);
-    res.send({status: "OK", data: workout});
+    try {
+        const workout = workoutService.getOneWorkout(workoutId);
+        res.send({status: "OK", data: workout});
+    } catch (error) {
+        res
+            .status(error?.status || 500)
+            .send({status: "ERROR", message: error?.message || error});
+    }
 };
 
 const createNewWorkout = (req, res) => {

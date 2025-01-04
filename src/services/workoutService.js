@@ -2,13 +2,21 @@ const { v4: uuid } = require('uuid');
 const Workout = require("../database/Workout");
 
 const getAllWorkouts = () => {
-    const allWorkouts = Workout.getAllWorkouts();
-    return allWorkouts;
+    try {
+        const allWorkouts = Workout.getAllWorkouts();
+        return allWorkouts;
+    } catch (error) {
+        throw error;
+    }
 }
 
 const getOneWorkout = (workoutId) => {
-    const workout = Workout.getOneWorkout(workoutId);
-    return workout;
+    try {
+        const workout = Workout.getOneWorkout(workoutId);
+        return workout;
+    } catch (error) {
+        throw error;
+    }
 }
 
 const createNewWorkout = (newWorkout) => {

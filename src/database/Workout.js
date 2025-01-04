@@ -2,15 +2,26 @@ const DB = require('./db.json');
 const { saveToDatabase } = require('./utils');
 
 const getAllWorkouts = () => {
-    return DB.workouts;
+    try {
+        return DB.workouts;
+    } catch (error) {
+        throw { status: 500, message: error };
+    }
 };
 
 const getOneWorkout = (workoutId) => {
-    const workout = DB.workouts.find((workout) => workout.id === workoutId);
-    if (!workout) {
-        return;
+    try {
+        const workout = DB.workouts.find((workout) => workout.id === workoutId);
+        if (!workout) {
+            throw {
+                status: 404,
+                message: `Workout with ID '${workoutId}' not found`,
+            };
+        }
+        return workout;
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
     }
-    return workout;
 };
 
 const createNewWorkout = (newWorkout) => {
