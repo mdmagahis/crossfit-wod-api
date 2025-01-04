@@ -38,8 +38,14 @@ const createNewWorkout = (req, res) => {
         trainerTips: body.trainerTips
     };
     
-    const createdWorkout = workoutService.createNewWorkout(newWorkout);
-    res.status(201).send({status: "OK", data: createdWorkout});
+    try {
+        const createdWorkout = workoutService.createNewWorkout(newWorkout);
+        res.status(201).send({status: "OK", data: createdWorkout});
+    } catch (error) {
+        res
+            .status(error?.status || 500)
+            .send({status: "ERROR", message: error?.message || error});
+    }
 };
 
 const updateOneWorkout = (req, res) => {
