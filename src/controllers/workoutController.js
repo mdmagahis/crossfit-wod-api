@@ -87,8 +87,14 @@ const deleteOneWorkout = (req, res) => {
         res.status(400).send({status: "ERROR", message: "Missing required fields"});
         return;
     }
-    workoutService.deleteOneWorkout(workoutId);
-    res.status(204).send({status: "OK"});
+    try {
+        workoutService.deleteOneWorkout(workoutId);
+        res.status(204).send({status: "OK"});
+    } catch (error) {
+        res
+            .status(error?.status || 500)
+            .send({status: "ERROR", message: error?.message || error});
+    }
 };
 
 module.exports = {

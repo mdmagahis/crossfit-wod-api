@@ -68,10 +68,17 @@ const updateOneWorkout = (workoutId, changes) => {
 const deleteOneWorkout = (workoutId) => {
     const workoutIndex = DB.workouts.findIndex((workout) => workout.id === workoutId);
     if (workoutIndex === -1) {
-        return;
+        throw {
+            status: 404,
+            message: `Workout with ID '${workoutId}' not found`,
+        };
     }
-    const deletedWorkout = DB.workouts.splice(workoutIndex, 1);
-    saveToDatabase(DB);
+    try {
+        const deletedWorkout = DB.workouts.splice(workoutIndex, 1);
+        saveToDatabase(DB);
+    } catch (error) {
+        throw { status: error?.status || 500, message: error?.message || error };
+    }
 };
 
 module.exports = {
